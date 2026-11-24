@@ -1,0 +1,31 @@
+# Temy Digital Workers - Microsoft marketplace landing page + webhook.
+# live      : https://diworkers.com/marketplace/*  (nginx -> 127.0.0.1:8710)
+# test      : same app against Microsoft's SaaS API emulator, localhost only (127.0.0.1:8711)
+# emulator  : github.com/microsoft/Commercial-Marketplace-SaaS-API-Emulator (127.0.0.1:8712)
+name: diworkers-marketplace
+services:
+  live:
+    build: .
+    restart: unless-stopped
+    ports: ["127.0.0.1:8710:8000"]
+    env_file: .env.live
+    volumes:
+      - ./data/live:/data
+      - ./secrets/app.key:/secrets/app.key:ro
+  test:
+    build: .
+    restart: unless-stopped
+    ports: ["127.0.0.1:8711:8000"]
+    env_file: .env.test
+    volumes:
+      - ./data/test:/data
+      - ./secrets/app.key:/secrets/app.key:ro
+  emulator:
+    build: {context: ./emulator-src, dockerfile: docker/Dockerfile}
+    restart: unless-stopped
+    ports: ["127.0.0.1:8712:80"]
+    environment:
+      PUBLISHER_ID: TemyDigitalWorkers
+      LANDING_PAGE_URL: http://127.0.0.1:8711/marketplace/landing
+      WEBHOOK_URL: http://test:8000/marketplace/webhook
+      WEBHOOK_CALL_PATCH_DELAY: "3"
