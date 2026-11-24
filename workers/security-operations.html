@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Operations | Temy Digital Workers</title>
+<meta name="description" content="A team of twelve security workers on one board: threat hunting, alert triage, attack surface, identity and cloud posture, detection engineering and more.">
+<meta property="og:title" content="Security Operations | Temy Digital Workers">
+<meta property="og:description" content="A team of twelve security workers on one board: threat hunting, alert triage, attack surface, identity and cloud posture, detection engineering and more.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://diworkers.com/workers/security-operations.html">
+<meta property="og:image" content="https://diworkers.com/assets/video/flow-ap-clerk.jpg">
+<link rel="canonical" href="https://diworkers.com/workers/security-operations.html">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/img/favicon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@400;500;600&family=Montserrat:wght@600;700&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css?v=2">
+</head>
+<body>
+<header class="hdr"><div class="wrap"><div class="pill">
+<a class="brand" href="/" aria-label="Temy Digital Workers, home"><img src="/assets/img/temy-logo.svg" alt="Temy" width="81" height="24"><span class="sub">Digital<br>Workers</span></a>
+<nav class="nav" aria-label="Main"><a href="/workers.html" class=on>Workers</a><a href="/how-it-works.html">How it works</a><a href="/trust.html">Security</a><a href="/partners.html">Partners</a><a href="/about.html">About</a></nav>
+<div style="display:flex;align-items:center;gap:8px"><a class="btn red sm cta-top" href="/contact.html">Book a demo</a>
+<button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button></div>
+</div></div></header>
+<main>
+<section class="hero w-hero"><div class="wrap hero-grid">
+<div><div class="crumbs"><a href="/workers.html">Workers</a> / Security</div>
+<h1>A security team of digital workers, <em class="r">on one board</em>.</h1><p class="lead" style="margin-top:20px">Twelve specialised workers share one findings board. Each does one job well (enrichment, hunting, triage, posture checks) and the later ones build on what the earlier ones found. A person approves every containment action.</p>
+<div class="cta" style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn red" href="/contact.html?worker=security-operations">Book a demo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn ghost" href="#how">How it works</a></div>
+<div class="facts"><div class="fact"><b>12</b><span>security workers on one board</span></div><div class="fact"><b>110</b><span>findings on our own infrastructure in the first runs</span></div><div class="fact"><b>0</b><span>actions executed without approval</span></div></div></div>
+<div class="rv"><div class="card" style="padding:32px"><div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><span class="tag">The problem it solves</span>
+<p style="font-size:18px;color:var(--ink)">Small security teams drown in alerts and checklists. The important signal, an exposed bucket, an unpatched exploited CVE, a missing DMARC record, sits in a queue nobody has time to work through.</p>
+<div class="sys"><span class="chip"><img src="/assets/logos/github.svg" alt="" width="22" height="22">GitHub</span><span class="chip"><img src="/assets/logos/digitalocean.svg" alt="" width="22" height="22">DigitalOcean</span><span class="chip"><img src="/assets/logos/google-chat.svg" alt="" width="22" height="22">Google Chat</span></div><p class="muted small" style="margin-top:14px">Microsoft Defender, Entra and Purview connectors are on the roadmap for Microsoft-centred customers.</p></div></div>
+</div></section>
+<section id="how" class="bg-soft"><div class="wrap split" style="align-items:start">
+<div class="stack" style="position:sticky;top:110px"><span class="eyebrow">Step by step</span><h2>What the Security Operations does.</h2>
+<p class="lead">Each step is either an automated action, an AI agent's judgement or a person's decision. You choose where the people are.</p></div>
+<div class="timeline"><div class="row rv"><div class="n">1</div><div><h3>Indicator enrichment</h3><p>Looks up suspicious IPs, domains and hashes in public threat-intelligence feeds.</p>
+<span class="who script">Automated step</span></div></div><div class="row rv"><div class="n">2</div><div><h3>Threat hunting</h3><p>Correlates fresh intelligence with what is already known and writes hunt queries.</p>
+<span class="who ai">AI agent</span></div></div><div class="row rv"><div class="n">3</div><div><h3>Alert triage</h3><p>Scores alerts against the list of vulnerabilities known to be exploited in the wild.</p>
+<span class="who ai">AI agent</span></div></div><div class="row rv"><div class="n">4</div><div><h3>Posture checks</h3><p>Attack surface from certificate logs, email identity (SPF, DKIM, DMARC), public cloud storage, endpoint coverage.</p>
+<span class="who script">Automated step</span></div></div><div class="row rv gate"><div class="n">5</div><div><h3>Response proposals</h3><p>Drafts containment steps as a dry run. Nothing runs until an analyst approves it.</p>
+<span class="who human">Person decides</span></div></div><div class="row rv"><div class="n">6</div><div><h3>Daily briefing</h3><p>A SOC copilot summarises the whole board every morning.</p>
+<span class="who ai">AI agent</span></div></div></div></div></section>
+<section class="dark"><div class="wrap"><span class="eyebrow">The real flow</span><h2 style="margin:14px 0 10px">Watch the Security Operations run.</h2>
+<p class="lead">The real Threat Hunter flow: it collects fresh threat intelligence, an AI agent correlates it with what we already know, a second pass writes hunt queries, and the results go to the security hub and to chat.</p>
+<div class="frame rv" style="margin-top:28px"><div class="chrome"><i></i><i></i><i></i><span>Security Operations flow</span></div>
+<video src="/assets/video/flow-threat-hunting.mp4" poster="/assets/video/flow-threat-hunting.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Recording of the Security Operations flow running"></video></div></div></section>
+<section><div class="wrap"><div class="case-box rv"><span class="eyebrow">Real case</span><h2 style="margin:14px 0 16px">Case: pointing the team at our own estate</h2><p class="lead" style="max-width:none;color:var(--ink)">We run the security workers against Temy's own infrastructure. In their first runs they raised 110 findings across hunting, triage, attack surface, email identity, cloud posture and endpoint coverage, each with the evidence that produced it. Response actions are proposals only: they are recorded, explained and wait for a person.</p></div></div></section>
+<section class="tight"><div class="wrap split" style="align-items:start"><div class="stack"><span class="eyebrow">Questions</span><h2>What people ask.</h2></div><div class="faq"><details><summary>Will it block anything on its own?</summary><p>No. Containment is always a proposal that an analyst approves.</p></details><details><summary>Which workers are in the team?</summary><p>Indicator enrichment, threat hunter, detection engineer (Sigma, Elastic, YARA), alert triage, incident investigator, attack surface, identity posture, cloud posture, endpoint coverage gaps, response proposals, SOC copilot and compliance evidence.</p></details></div></div></section>
+<section class="bg-soft"><div class="wrap"><div class="sec-head"><div class="stack"><span class="eyebrow">More workers</span><h2>Other jobs we take off your plate.</h2></div></div><div class="grid g3"><a class="card rv" href="/workers/ap-clerk.html"><span class="tag">Finance</span><h3>AP Clerk</h3><p>Reads supplier invoices from chat and email, codes every line and drafts the bill in QuickBooks. Asks a person only when it is unsure.</p></a><a class="card rv" href="/workers/client-briefs.html"><span class="tag">IT services</span><h3>Client Briefs</h3><p>For IT service providers: reads each client's tickets, contract and devices in HaloPSA plus documentation in Hudu, and writes five briefs before the call.</p></a><a class="card rv" href="/workers/compliance-evidence.html"><span class="tag">Compliance</span><h3>Compliance Evidence</h3><p>Collects evidence for ISO 27001 and SOC 2 controls straight from your systems, grades each control and explains every gap.</p></a><a class="card rv" href="/workers/sales-assistant.html"><span class="tag">Sales</span><h3>Sales Assistant</h3><p>Enriches new leads in HubSpot with verified company and contact details, and writes the result back to the CRM record.</p></a><a class="card rv" href="/workers/research-monitor.html"><span class="tag">Research</span><h3>Research and Monitoring</h3><p>Reads the sources you care about every day, keeps what matters, rewrites it clearly and publishes a ranked digest. No repeats.</p></a></div></div></section>
+<section class="tight"><div class="wrap"><div class="band rv">
+<div><h2>See a digital worker do your job.</h2><p>30 minutes, on your own process. We show a worker running end to end and agree what a first pilot would prove.</p></div>
+<div class="acts"><a class="btn white" href="/contact.html">Book a demo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn line" href="/workers.html">Browse workers</a></div>
+</div></div></section>
+</main>
+<footer><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="/"><img src="/assets/img/temy-logo.svg" alt="Temy" width="81" height="24"><span class="sub">Digital<br>Workers</span></a>
+<p style="margin-top:18px;max-width:340px">AI workers that do back-office jobs end to end, inside the systems you already use, with a person approving every step that matters.</p>
+<a href="mailto:hello@diworkers.com" style="margin-top:14px">hello@diworkers.com</a></div>
+<div><h4>Workers</h4><a href="/workers/ap-clerk.html">AP Clerk</a><a href="/workers/client-briefs.html">Client Briefs</a><a href="/workers/security-operations.html">Security Operations</a><a href="/workers/compliance-evidence.html">Compliance Evidence</a><a href="/workers/sales-assistant.html">Sales Assistant</a><a href="/workers/research-monitor.html">Research and Monitoring</a></div>
+<div><h4>Product</h4><a href="/how-it-works.html">How it works</a><a href="/trust.html">Security and data</a><a href="/partners.html">For IT partners</a><a href="/contact.html">Book a demo</a></div>
+<div><h4>Company</h4><a href="/about.html">About</a><a href="/support.html">Support</a><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of service</a><a href="https://www.temy.co" rel="noopener">temy.co</a></div>
+</div>
+<div class="legal">Temy Digital Workers is a trading name of Team Technologies Development Center LLP, a limited liability partnership registered in England and Wales, registration number OC404423. Registered office: Ground Floor, 41 Devonshire Street, London W1G 7AJ, United Kingdom.<br>&copy; 2026 Team Technologies Development Center LLP. All rights reserved. Product names and logos of other companies belong to their owners and are shown only to name the systems our workers connect to.</div>
+</div></footer>
+<script src="/assets/js/site.js?v=2" defer></script>
+</body>
+</html>

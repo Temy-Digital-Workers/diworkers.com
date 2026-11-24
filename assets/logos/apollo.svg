@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="Apollo.io">
+  <circle cx="24" cy="24" r="22" fill="#111827"/>
+  <path d="M24 9a15 15 0 0 0-9.7 26.4l3.6-9.3a7.6 7.6 0 0 1 12.2 0l3.6 9.3A15 15 0 0 0 24 9zm0 11.2a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8z" fill="#6D4AFF"/>
+  <path d="M24 30.4c2.3 0 4.4.9 5.9 2.4L28 37.6a15 15 0 0 1-8 0l-1.9-4.8a8.3 8.3 0 0 1 5.9-2.4z" fill="#A58BFF"/>
+</svg>
