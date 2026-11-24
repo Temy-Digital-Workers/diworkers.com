@@ -171,6 +171,6 @@ page("privacy.html", "Privacy policy | Temy Digital Workers", "Privacy policy of
 page("terms.html", "Terms of service | Temy Digital Workers", "Terms of service of Temy Digital Workers.", TERMS)
 page("support.html", "Support | Temy Digital Workers", "How to get support for Temy Digital Workers.", SUPPORT)
 page("404.html", "Not found | Temy Digital Workers", "Page not found.", '<main class="wrap"><article class="doc"><h1>Page not found</h1><p><a href="/">Back to the home page</a></p></article></main>')
-(ROOT / "CNAME").write_text("diworkers.com\n", encoding="utf-8")
-(ROOT / ".nojekyll").write_text("", encoding="utf-8")
+
+
 print("built")
