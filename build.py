@@ -80,7 +80,7 @@ def layout(path, title, desc, body, active=""):
 <a href="mailto:{HELLO}" style="margin-top:14px">{HELLO}</a></div>
 <div><h4>Workers</h4>{"".join(f'<a href="/workers/{w["slug"]}.html">{w["name"]}</a>' for w in WORKERS)}</div>
 <div><h4>Product</h4><a href="/how-it-works.html">How it works</a><a href="/trust.html">Security and data</a><a href="/partners.html">For IT partners</a><a href="/contact.html">Book a demo</a></div>
-<div><h4>Company</h4><a href="/about.html">About</a><a href="/support.html">Support</a><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of service</a><a href="https://www.temy.co" rel="noopener">temy.co</a></div>
+<div><h4>Company</h4><a href="/about.html">About</a><a href="/support.html">Support</a><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of service</a></div>
 </div>
 <div class="legal">{FOOT_LEGAL}<br>&copy; 2026 {LEGAL}. All rights reserved. Product names and logos of other companies belong to their owners and are shown only to name the systems our workers connect to.</div>
 </div></footer>
@@ -106,10 +106,13 @@ def chips(names):
 
 LOGO_NAMES = {"quickbooks": "QuickBooks Online", "google-chat": "Google Chat", "gmail": "Gmail", "halo": "HaloPSA",
               "hudu": "Hudu", "hubspot": "HubSpot", "apollo": "Apollo.io", "snovio": "Snov.io", "jira": "Jira",
-              "github": "GitHub", "digitalocean": "DigitalOcean", "serpapi": "SerpAPI", "google-sheets": "Google Sheets"}
+              "github": "GitHub", "digitalocean": "DigitalOcean", "serpapi": "SerpAPI", "google-sheets": "Google Sheets",
+              "business-central": "Dynamics 365 Business Central", "outlook": "Outlook", "microsoft-365": "Microsoft 365",
+              "dynamics-365": "Dynamics 365 Sales", "entra": "Microsoft Entra ID", "defender": "Microsoft Defender",
+              "teams": "Microsoft Teams", "sharepoint": "SharePoint"}
 
 FLOWS = [
-    ("flow-ap-clerk", "AP Clerk", "The real AP Clerk flow: a Google Chat message starts it, the hub records the invoice, the AI agent codes it, QuickBooks receives the bill, and the chat gets a report. It loops for up to 30 rounds and parks for a person if something is off."),
+    ("flow-ap-clerk", "AP Clerk", "The real AP Clerk flow, in its QuickBooks version: a Google Chat message starts it, the hub records the invoice, the AI agent codes it, QuickBooks receives the bill, and the chat gets a report. It loops for up to 30 rounds and parks for a person if something is off."),
     ("flow-client-briefs", "Client Briefs", "The real Client Briefs flow: on a schedule it collects tickets and contracts from HaloPSA and documentation from Hudu, joins them, has the AI write five briefs and publishes them to the worker's hub."),
     ("flow-threat-hunting", "Threat Hunter", "The real Threat Hunter flow: it collects fresh threat intelligence, an AI agent correlates it with what we already know, a second pass writes hunt queries, and the results go to the security hub and to chat."),
 ]
@@ -118,29 +121,51 @@ FLOWS = [
 WORKERS = [
     dict(
         slug="ap-clerk", name="AP Clerk", icon="invoice", family="Finance",
-        logos=["google-chat", "gmail", "quickbooks"],
-        card="Reads supplier invoices from chat and email, codes every line and drafts the bill in QuickBooks. Asks a person only when it is unsure.",
+        logos=["outlook", "business-central", "quickbooks"],
+        card="Reads supplier invoices from the AP mailbox, codes every line and enters a draft purchase invoice in Business Central or QuickBooks. Asks a person only when it is unsure.",
         h1='Every supplier invoice, from the inbox <em class="r">to the books</em>.',
-        lead="The AP Clerk picks up bills wherever they arrive, reads them, matches the supplier, codes each line to the right account and posts the bill to your accounting system. When it is not sure, it stops and asks you in chat.",
-        facts=[("25", "invoices in our accounting test run"), ("18", "posted to QuickBooks without help"), ("3 + 1", "sent to a person, plus one duplicate caught")],
+        lead="The AP Clerk picks up bills wherever they arrive, reads them, matches the supplier, codes each line to the right G/L account and enters the invoice in your accounting system. When it is not sure, it stops and asks a person.",
+        facts=[("25", "supplier emails in our Business Central test run"), ("17", "entered as draft purchase invoices with no human touch"), ("5 + 3", "sent to a person, plus 2 duplicates and 1 statement stopped")],
         problem="Someone on the team spends hours a week opening PDFs, retyping supplier names, amounts and VAT, choosing an expense account and chasing duplicates. It is slow, it is boring, and the mistakes show up at month end.",
         steps=[
-            ("Finds the invoice", "Watches a Google Chat space and a mailbox. A PDF or a photo of a bill is enough.", "script"),
+            ("Finds the invoice", "Reads the AP mailbox in Outlook (or a chat space). A PDF or a photo of a bill is enough.", "script"),
             ("Reads and understands it", "Extracts supplier, invoice number, dates, lines, tax and totals, even from scans.", "ai"),
-            ("Checks against your books", "Looks up the supplier and accounts in QuickBooks, spots duplicates and unknown suppliers.", "script"),
-            ("Codes every line", "Chooses the expense account and tax code for each line and scores its own confidence.", "ai"),
-            ("Asks when unsure", "Below the confidence threshold, or for a new supplier, it asks a person in chat and waits.", "human"),
-            ("Posts the bill", "Creates the bill in QuickBooks, links the original document and reports back in the thread.", "script"),
+            ("Checks against your books", "Looks up suppliers, G/L accounts and recent invoices in Business Central, spots duplicates and unknown suppliers.", "script"),
+            ("Codes every line", "Chooses the G/L account for each line, separates VAT and scores its own confidence.", "ai"),
+            ("Asks when unsure", "Below the confidence threshold, for a new supplier or when the arithmetic does not add up, it waits for a person.", "human"),
+            ("Enters the invoice", "Creates a draft purchase invoice in Business Central with the original PDF attached, checks the VAT total and emails a report.", "script"),
         ],
-        case_title="Case: 25 invoices through a real accounting flow",
-        case="We ran the AP Clerk on a QuickBooks Online test company with 25 supplier invoices sent through Google Chat and email. 18 were posted as bills with no human touch. 3 went to a person because confidence was below the threshold (82%, 86% and 74%). It caught 1 duplicate before it reached the books, and 1 invoice was rejected by the reviewer. Every invoice keeps its source file, its confidence score and the person who approved it.",
-        media=("img", "/assets/img/ap-invoices.jpg", "The AP Clerk's own portal: every invoice, its confidence and what happened to it (test company data)."),
+        case_title="Case: 25 supplier emails into Business Central",
+        case="We emailed 25 UK supplier documents to an AP mailbox and ran the AP Clerk against a Dynamics 365 Business Central company (the CRONUS UK demo). 17 were entered as draft purchase invoices with the right G/L accounts and the PDF attached, with no human touch. 5 went to a person: a blurry phone photo, a vague \"services as agreed\" line, an invoice whose lines did not add up, and 2 new suppliers. It stopped a byte-identical resend and a reused invoice number, and recognised a statement as not an invoice. On 7 drafts Business Central's VAT total differed from the printed one because those suppliers were set up without UK VAT, and the worker flagged each before posting. The same worker also runs on QuickBooks Online, where a 25-invoice run posted 18 bills with no human touch.",
+        media=("img", "/assets/img/bc-ap-drafts.jpg", "The 17 draft purchase invoices the AP Clerk entered in Business Central from 25 supplier emails (CRONUS UK demo company)."),
         video="flow-ap-clerk",
-        systems=["google-chat", "gmail", "quickbooks"],
-        next_note="Works with QuickBooks Online today. The Microsoft Dynamics 365 Business Central connector is being built now.",
+        systems=["outlook", "business-central", "quickbooks", "google-chat", "gmail"],
+        next_note="Runs on Dynamics 365 Business Central and QuickBooks Online today. Invoices arrive through Outlook, Google Chat or Gmail.",
         faq=[("Does it post anything without approval?", "Only what you allow. You set the confidence threshold and which suppliers or amounts always need a person. Everything else is posted and reported."),
              ("What if the invoice is a bad scan?", "It reads scans and photos, but if a field cannot be read with confidence it asks rather than guesses."),
              ("Can it handle VAT and multiple currencies?", "It reads tax lines and currency from the document and uses the tax codes set up in your accounting system.")],
+    ),
+    dict(
+        slug="ar-collections", name="AR Collections Clerk", icon="invoice", family="Finance",
+        logos=["business-central", "outlook"],
+        card="Reads open customer invoices in Business Central, ages them and drafts a polite reminder per overdue customer in Outlook for a person to send.",
+        h1='Overdue invoices, <em class="r">chased politely and on time</em>.',
+        lead="The AR Collections Clerk reads your open sales invoices, sorts them by how overdue they are, drafts one reminder per customer with the exact invoices and amounts, and sends the finance team a summary with a cash-in forecast. Nothing goes to a customer until a person sends it.",
+        facts=[("13", "open invoices read in our Business Central test"), ("4", "reminders drafted, one per overdue customer"), ("0", "emails sent to customers without a person")],
+        problem="Chasing late payers is the job everyone postpones. Reminders go out late, with the wrong amounts, or not at all, and cash sits in receivables.",
+        steps=[
+            ("Reads the ledger", "Takes open sales invoices and customer balances from Business Central.", "script"),
+            ("Ages every invoice", "Sorts them into current, 1-30, 31-60, 61-90 and 90+ days overdue.", "script"),
+            ("Drafts the reminders", "Writes one reminder per customer in the right tone for how late it is, with a table of that customer's invoices.", "ai"),
+            ("Leaves them for a person", "Saves each reminder as an Outlook draft. A person reviews and sends.", "human"),
+            ("Reports", "Emails the finance team the ageing table and a weekly cash-in forecast.", "script"),
+        ],
+        case_title="Case: a Business Central test company",
+        case="We ran the AR Collections Clerk on the CRONUS UK test company in Dynamics 365 Business Central. It read 13 open sales invoices across 4 customers, aged them, and found £44,005.48 overdue, all more than 90 days past due. It wrote one reminder per customer, each with a table of that customer's invoices built from Business Central figures, and left all 4 in Outlook Drafts for a person to review and send. Nothing went to customers; it sent one summary with the ageing table and the cash-in forecast to the finance mailbox.",
+        media=None, video=None, systems=["business-central", "outlook"],
+        next_note="Runs on Dynamics 365 Business Central today.",
+        faq=[("Will it email my customers on its own?", "No. Reminders are drafts until a person sends them."),
+             ("Can it match our tone?", "Yes. The tone per ageing bucket is set when the worker is configured.")],
     ),
     dict(
         slug="client-briefs", name="Client Briefs", icon="brief", family="IT services",
@@ -182,50 +207,51 @@ WORKERS = [
         case_title="Case: pointing the team at our own estate",
         case="We run the security workers against Temy's own infrastructure. In their first runs they raised 110 findings across hunting, triage, attack surface, email identity, cloud posture and endpoint coverage, each with the evidence that produced it. Response actions are proposals only: they are recorded, explained and wait for a person.",
         media=None, video="flow-threat-hunting", systems=["github", "digitalocean", "google-chat"],
-        next_note="Microsoft Defender, Entra and Purview connectors are on the roadmap for Microsoft-centred customers.",
+        next_note="Microsoft 365 identity posture (Entra, MFA, admin roles, Secure Score) runs today through the Compliance Evidence worker. Defender alert triage is next.",
         faq=[("Will it block anything on its own?", "No. Containment is always a proposal that an analyst approves."),
              ("Which workers are in the team?", "Indicator enrichment, threat hunter, detection engineer (Sigma, Elastic, YARA), alert triage, incident investigator, attack surface, identity posture, cloud posture, endpoint coverage gaps, response proposals, SOC copilot and compliance evidence.")],
     ),
     dict(
         slug="compliance-evidence", name="Compliance Evidence", icon="check", family="Compliance",
-        logos=["github", "jira", "digitalocean"],
-        card="Collects evidence for ISO 27001 and SOC 2 controls straight from your systems, grades each control and explains every gap.",
+        logos=["microsoft-365", "entra", "github"],
+        card="Collects evidence for ISO 27001, SOC 2 and Cyber Essentials controls straight from Microsoft 365 and your other systems, grades each control and explains every gap.",
         h1='Audit evidence that <em class="r">collects itself</em>.',
         lead="The Compliance Evidence worker checks your controls against the systems that actually run your business, keeps the evidence with a timestamp and tells you in plain words what is missing.",
-        facts=[("31", "controls graded on our own infrastructure"), ("ISO 27001", "and SOC 2 control sets"), ("Every", "result keeps its method and evidence")],
+        facts=[("19", "controls graded on our own Microsoft 365 tenant"), ("8 / 6 / 5", "passed, failed, not collected"), ("0", "controls marked as passed without evidence")],
         problem="Before an audit, people take screenshots, export lists and paste them into folders. The evidence is out of date by the time the auditor reads it, and nobody can say how it was collected.",
         steps=[
             ("Reads the controls", "Starts from the ISO 27001 and SOC 2 controls you are in scope for.", "script"),
-            ("Checks the real systems", "Cloud resources, source code settings, ticketing, certificates and access.", "script"),
+            ("Checks the real systems", "Microsoft 365 and Entra (MFA, admin roles, sign-in policy, Secure Score), email DNS, cloud resources, source code settings and certificates.", "script"),
             ("Grades each control", "Pass, partial or fail, with the exact check that produced the grade.", "ai"),
             ("Explains the gaps", "Writes what is missing and what would close it, in language a manager understands.", "ai"),
             ("Keeps the evidence", "Stores artefacts, provenance and history so the auditor sees how each result was made.", "script"),
         ],
-        case_title="Case: our own ISO 27001 and SOC 2 evidence",
-        case="We use this worker on Temy's own infrastructure (DigitalOcean, GitHub, Jira and our TLS certificates). It grades 31 controls, keeps the evidence for each, and raised one real finding that we then fixed. The same worker now runs as part of the security team.",
-        media=None, video=None, systems=["digitalocean", "github", "jira"],
-        next_note="Microsoft 365, Entra, Defender and Purview evidence collection is next for Microsoft-centred customers.",
+        case_title="Case: our own Microsoft 365 tenant",
+        case="We pointed the Compliance Evidence worker at our own Microsoft 365 tenant and it graded 19 controls mapped to ISO 27001:2022, SOC 2 and Cyber Essentials, using Microsoft Graph and public DNS only. 8 passed, including enforced MFA, blocked legacy sign-in, and SPF, DKIM and DMARC on our domain. 6 failed with 11 specific gaps, each with the evidence behind it and the change that would close it. 5 more were marked not collected rather than passed, because the worker did not yet have permission to read those systems. On our engineering estate (DigitalOcean, GitHub, Jira and TLS certificates) the same worker grades 31 controls.",
+        media=None, video=None, systems=["microsoft-365", "entra", "digitalocean", "github", "jira"],
+        next_note="Intune device compliance, SharePoint sharing, mailbox forwarding and Defender alerts are added as soon as the tenant grants their read permissions.",
         faq=[("Does this replace the auditor?", "No. It replaces the evidence-gathering, so the auditor's time goes on judgement."),
              ("Can we add our own controls?", "Yes. A control is a check plus a rule for grading it.")],
     ),
     dict(
         slug="sales-assistant", name="Sales Assistant", icon="sales", family="Sales",
-        logos=["hubspot", "apollo", "snovio"],
-        card="Enriches new leads in HubSpot with verified company and contact details, and writes the result back to the CRM record.",
+        logos=["dynamics-365", "hubspot", "apollo"],
+        card="Enriches and scores new leads in Dynamics 365 Sales or HubSpot, explains each score on the record and drafts the first email in Outlook.",
         h1='Every new lead, <em class="r">researched before you call</em>.',
         lead="The Sales Assistant takes new leads from your CRM, finds verified company and contact data, and writes it back to the record, so sales starts from facts instead of a bare email address.",
-        facts=[("Hourly", "small batches, never a bulk overwrite"), ("2", "data sources cross-checked"), ("0", "existing CRM fields overwritten")],
+        facts=[("10", "Dynamics 365 leads enriched and scored in our test run"), ("5", "first-touch emails left as Outlook drafts"), ("0", "existing CRM fields overwritten")],
         problem="Leads arrive as a name and an email. Someone has to look up the company, the role and a verified address before anyone can call, and that research is where good leads go cold.",
         steps=[
-            ("Picks up new leads", "Takes a small batch of leads from HubSpot that have not been enriched yet.", "script"),
+            ("Picks up new leads", "Takes a small batch of open leads from Dynamics 365 Sales or HubSpot that have not been enriched yet.", "script"),
             ("Researches the person and company", "Looks them up in Apollo.io and Snov.io and compares the answers.", "script"),
             ("Verifies the email", "Keeps only addresses the providers can verify.", "script"),
-            ("Writes back safely", "Adds new fields to the HubSpot record. It never overwrites what your team typed.", "script"),
+            ("Checks and scores", "Matches each lead against existing contacts and accounts, then scores it with its reasons.", "ai"),
+            ("Writes back safely", "Adds a note to the CRM record and drafts the first email in Outlook. It never overwrites what your team typed or sends anything itself.", "script"),
         ],
-        case_title="Case: our own HubSpot",
-        case="We run the Sales Assistant on Temy's own HubSpot portal. It processes leads in batches every hour, skips anything already enriched, and adds its results in separate fields so a person can always see what came from the worker. Its hub shows each lead with a link back to the HubSpot record.",
-        media=None, video=None, systems=["hubspot", "apollo", "snovio"],
-        next_note="Dynamics 365 Sales is on the roadmap.",
+        case_title="Case: Dynamics 365 Sales, and our own HubSpot",
+        case="We ran the Sales Assistant on a Dynamics 365 Sales trial with 10 open leads. It enriched all 10 with Apollo.io and Snov.io and checked each against existing contacts and accounts (1 was already a contact, 5 worked at known accounts). It scored and explained every lead (5 worth a short email, 5 not worth outreach now), added the reasoning as a note on each lead without changing any field, and left 5 first-touch emails as Outlook drafts for a salesperson to send. On Temy's own HubSpot portal it runs every hour in small batches and writes its results to separate fields.",
+        media=None, video=None, systems=["dynamics-365", "hubspot", "outlook", "apollo", "snovio"],
+        next_note="Runs on Dynamics 365 Sales and HubSpot today.",
         faq=[("Will it email leads on its own?", "No. It researches and records. Outreach stays with your team."),
              ("Can it work with our data provider?", "Yes, providers are connectors. Apollo.io and Snov.io are the ones in use today.")],
     ),
@@ -254,12 +280,12 @@ WORKERS = [
 
 CONSOLE = [
     dict(short="AP Clerk", name="AP Clerk", role="Finance worker", av="AP", steps=[
-        ["New bill in #accounts", "northwind-office-supply-1007.pdf"],
-        ["Read and understood", "Northwind Office Supply, 3 lines, total $226.80"],
-        ["Matched in QuickBooks", "Known supplier, no duplicate found"],
-        ["Coded every line", "Office supplies, confidence 82%"],
-        ["Asked a person", "Confidence below 90%: waiting for approval", "APPROVAL GATE"],
-        ["Bill posted to QuickBooks", "Reported back in the chat thread"]]),
+        ["New email in the AP mailbox", "cr-05-wwi.pdf from Wide World Importers"],
+        ["Read and understood", "2 lines, net £1,655.00, VAT £331.00, total £1,986.00"],
+        ["Checked in Business Central", "Known supplier, no duplicate found"],
+        ["Coded every line", "Freight fees for goods, Customs and forwarding, confidence 99%"],
+        ["Checked the VAT", "Business Central total differs by £284.00: flagged", "CHECK"],
+        ["Draft purchase invoice entered", "PDF attached, report emailed to the AP team"]]),
     dict(short="Client Briefs", name="Client Briefs", role="IT services worker", av="CB", steps=[
         ["Collected from HaloPSA", "41 tickets, contract, 23 devices"],
         ["Collected from Hudu", "Licences, backups, documentation"],
@@ -330,7 +356,7 @@ def home():
 <h2>Not a chatbot. <em class="r">A colleague with one job.</em></h2></div>
 <p class="lead" style="max-width:460px">A chatbot answers questions. A digital worker finishes work: it takes the input, does every step in your systems and hands you the result, with the evidence.</p></div>
 <div class="grid g3">
-<div class="card rv"><div class="ico">{icon('plug')}</div><h3>Works in your systems</h3><p>It signs in to QuickBooks, HaloPSA, HubSpot or your cloud with its own limited account, and works there like a careful new hire would.</p></div>
+<div class="card rv"><div class="ico">{icon('plug')}</div><h3>Works in your systems</h3><p>It signs in to Microsoft 365, Business Central, Dynamics 365, QuickBooks, HaloPSA, HubSpot or your cloud with its own limited account, and works there like a careful new hire would.</p></div>
 <div class="card rv d1"><div class="ico">{icon('hand')}</div><h3>Asks before it acts</h3><p>Approval gates sit wherever you want them. Low confidence, a new supplier or a risky change goes to a person in chat first.</p></div>
 <div class="card rv d2"><div class="ico">{icon('eye')}</div><h3>Shows its work</h3><p>Every run keeps its inputs, its decisions and its results. You can always see what was done, why, and who approved it.</p></div>
 </div></div></section>
@@ -339,7 +365,7 @@ def home():
 {flows_block()}
 
 <section><div class="wrap">
-<div class="sec-head"><div class="stack"><span class="eyebrow">The workers</span><h2>Six workers, each with a real case behind it.</h2></div>
+<div class="sec-head"><div class="stack"><span class="eyebrow">The workers</span><h2>Seven workers, each with a real case behind it.</h2></div>
 <a class="btn ghost" href="/workers.html">All workers {ARROW}</a></div>
 <div class="grid g3">{cards}</div></div></section>
 
@@ -354,7 +380,7 @@ def home():
 <section class="tight"><div class="wrap center">
 <span class="eyebrow">Connects to</span><h2 style="margin:14px 0 28px">The systems your team already uses</h2>
 <div class="marquee"><div class="track">{allchips}</div></div>
-<p class="muted small" style="margin-top:18px">Plus any system with an API. Microsoft Dynamics 365 Business Central and Microsoft 365 security connectors are in development.</p>
+<p class="muted small" style="margin-top:18px">Runs on Microsoft 365, Dynamics 365 Business Central and Dynamics 365 Sales, signing in with a certificate and no passwords. Plus any system with an API.</p>
 </div></section>
 
 <section class="bg-soft"><div class="wrap">
@@ -367,7 +393,7 @@ def home():
 </div></div></section>
 {band()}"""
     write("/index.html", "Temy Digital Workers: AI workers for real back-office work",
-          "Digital workers that do back-office jobs end to end in QuickBooks, HaloPSA, HubSpot and your cloud, with human approval and a full audit trail.", body)
+          "Digital workers that do back-office jobs end to end in Microsoft 365, Business Central, Dynamics 365, QuickBooks, HaloPSA and HubSpot, with human approval and a full audit trail.", body)
 
 
 def workers_index():
@@ -493,8 +519,7 @@ def partners():
 def about():
     body = f"""<section class="hero"><div class="wrap split">
 <div><span class="eyebrow">About</span><h1>Made by engineers who <em class="r">automate their own work first</em>.</h1>
-<p class="lead" style="margin-top:20px">Temy Digital Workers is built by Temy, a software engineering company that builds products for businesses in the UK, Europe and the US. We built Temy Labs to run our own engineering with AI agents, then turned the same platform on back-office work.</p>
-<a class="btn ghost" href="https://www.temy.co" rel="noopener" style="margin-top:24px">Visit temy.co {ARROW}</a></div>
+<p class="lead" style="margin-top:20px">Temy Digital Workers is built by Temy, a software engineering company that builds products for businesses in the UK, Europe and the US. We built Temy Labs to run our own engineering with AI agents, then turned the same platform on back-office work.</p></div>
 <div class="card rv" style="padding:36px"><span class="tag">Company details</span>
 <p style="color:var(--ink);margin-top:6px"><b>{LEGAL}</b><br>Trading as Temy Digital Workers<br>Registered in England and Wales, OC404423<br>D-U-N-S 221578021<br>{OFFICE}</p>
 <p style="margin-top:16px"><a href="https://find-and-update.company-information.service.gov.uk/company/OC404423" rel="noopener">View on Companies House</a></p></div></div></section>
